@@ -1,0 +1,93 @@
+﻿<ma:MetroWindow x:Class="ProjectAtlas.Views.MapPageView"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:local="clr-namespace:ProjectAtlas.Models.Map"
+                xmlns:ma="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                Name="View"
+                Title="Карта"
+                Width="1000"
+                Height="750"
+                DataContext="{Binding Path=MapPage,
+                                      Source={StaticResource Locator}}">
+
+    <ma:MetroWindow.Resources>
+        <DataTemplate DataType="{x:Type local:Point}">
+            <Thumb IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}}">
+                <Thumb.Template>
+                    <ControlTemplate TargetType="Thumb">
+                        <Canvas Margin="-10,-10,10,10">
+                            <Ellipse x:Name="Ellipse"
+                                     Width="20"
+                                     Height="20"
+                                     Fill="Yellow"
+                                     Stroke="Black"
+                                     StrokeThickness="1" />
+                        </Canvas>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:Connector}">
+            <Line x:Name="Line"
+                  Stroke="Blue"
+                  StrokeThickness="3"
+                  X1="{Binding Path=StartPoint.X}"
+                  X2="{Binding Path=EndPoint.X}"
+                  Y1="{Binding Path=StartPoint.Y}"
+                  Y2="{Binding Path=EndPoint.Y}" />
+        </DataTemplate>
+    </ma:MetroWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Slider x:Name="Slider"
+                Grid.Row="1"
+                Margin="10"
+                Maximum="1"
+                Minimum="0.3" />
+
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Path=Collection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <Border>
+                        <ScrollViewer Name="ScrollViewer"
+                                      CanContentScroll="True"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
+                            <Border>
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding Path=DisplayedImage}" Stretch="UniformToFill" />
+                                </Border.Background>
+
+                                <ItemsPresenter />
+                            </Border>
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </ItemsControl.Template>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Width="8192"
+                            Height="11264"
+                            Background="#01FFFFFF"
+                            IsItemsHost="True">
+                        <Canvas.LayoutTransform>
+                            <ScaleTransform ScaleX="{Binding Path=Value, ElementName=Slider}" ScaleY="{Binding Path=Value, ElementName=Slider}" />
+                        </Canvas.LayoutTransform>
+                    </Canvas>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding Path=X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Path=Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+    </Grid>
+</ma:MetroWindow>

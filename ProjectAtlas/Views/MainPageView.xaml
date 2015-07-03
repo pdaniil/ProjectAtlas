@@ -1,0 +1,578 @@
+﻿<ma:MetroWindow x:Class="ProjectAtlas.Views.MainPageView"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:bv="clr-namespace:ProjectAtlas.Extensions.Behaviors"
+                xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                xmlns:ma="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                Name="MainLayout"
+                Title="PathEditor"
+                Width="750"
+                Height="450"
+                DataContext="{Binding Path=MainPage,
+                                      Source={StaticResource Locator}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="179" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="1"
+                    Margin="1,0,3,1"
+                    Orientation="Horizontal">
+            <TextBlock Margin="0,5,0,0"
+                       VerticalAlignment="Center"
+                       Text="Версия: " />
+            <ComboBox Name="OffsetsBox"
+                      Width="120"
+                      Margin="0,7,0,2"
+                      ItemsSource="{Binding Path=Offsets,
+                                            Mode=TwoWay,
+                                            UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Margin="5,5,0,0"
+                       VerticalAlignment="Center"
+                       Text="(Для захвата координат: Ctrl + Z)" />
+        </StackPanel>
+
+        <Grid Grid.Row="0"
+              Grid.Column="0"
+              Margin="3,4,3,3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <Menu Background="Transparent">
+                <MenuItem Header="Файл">
+                    <MenuItem.Icon>
+                        <Image Margin="0" Source="..\Resources\application.png" />
+                    </MenuItem.Icon>
+
+                    <MenuItem Command="{Binding Path=LoadFromFileCommand}" Header="Открыть">
+                        <MenuItem.Icon>
+                            <Image Source="..\Resources\folder.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding Path=SaveToFileCommand}" Header="Сохранить">
+                        <MenuItem.Icon>
+                            <Image Source="..\Resources\disk.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Сохранить как...">
+                        <MenuItem.Icon>
+                            <Image Source="..\Resources\disk_multiple.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Выход">
+                        <MenuItem.Icon>
+                            <Image Source="..\Resources\door_in.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Command="{Binding Path=OpenMapCommand}" Header="Карта">
+                    <MenuItem.Icon>
+                        <Image Margin="0" Source="..\Resources\image_add.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </Menu>
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Grid.Column="0"
+              Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+
+                <ListView Name="Paths"
+                          Grid.Column="0"
+                          Width="170"
+                          Margin="5"
+                          ItemsSource="{Binding Path=Paths,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding Path=SelectedPath,
+                                                 Mode=TwoWay,
+                                                 UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Behaviors>
+                        <bv:SelectedItemsBehavior SelectedItems="{Binding Path=SelectedPaths, Mode=OneWayToSource}" />
+                    </i:Interaction.Behaviors>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Id, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding Path=AddPathCommand}" Header="Добавить">
+                                <MenuItem.Icon>
+                                    <Image Source="..\Resources\add.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding Path=DeletePathsCommand}"
+                                      CommandParameter="{Binding ElementName=MainLayout}"
+                                      Header="Удалить">
+                                <MenuItem.Icon>
+                                    <Image Source="..\Resources\delete.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Импорт">
+                                <MenuItem.Icon>
+                                    <Image Source="..\Resources\package_add.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Экспорт">
+                                <MenuItem.Icon>
+                                    <Image Source="..\Resources\package_go.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                </ListView>
+
+                <ScrollViewer Grid.Column="1"
+                              Margin="5"
+                              CanContentScroll="True"
+                              VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <Expander Grid.Row="0"
+                                  Margin="0,0,3,0"
+                                  BorderBrush="LightGray"
+                                  Header="Основное"
+                                  Padding="3">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           Text="ID" />
+                                <TextBox Grid.Row="0"
+                                         Grid.Column="1"
+                                         Height="22"
+                                         Margin="3"
+                                         Text="{Binding Path=SelectedPath.Id,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           Text="Неизвестно" />
+                                <TextBox Grid.Row="1"
+                                         Grid.Column="1"
+                                         Height="22"
+                                         Margin="3"
+                                         Text="{Binding Path=SelectedPath.Unk,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           Text="Флаг 1" />
+                                <TextBox Grid.Row="2"
+                                         Grid.Column="1"
+                                         Height="22"
+                                         Margin="3"
+                                         Text="{Binding Path=SelectedPath.Flag1,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Grid.Row="3"
+                                           Grid.Column="0"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Text="Флаг 2" />
+                                <TextBox Grid.Row="3"
+                                         Grid.Column="1"
+                                         Height="22"
+                                         Margin="3"
+                                         Text="{Binding Path=SelectedPath.Flag2,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Expander>
+
+                        <Expander Grid.Row="1"
+                                  Margin="0,5,3,0"
+                                  BorderBrush="LightGray"
+                                  Header="Точки"
+                                  Padding="3">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <ListView Grid.Column="0"
+                                          Width="135"
+                                          MaxHeight="275"
+                                          Margin="3"
+                                          ItemsSource="{Binding Path=SelectedPath.Points,
+                                                                UpdateSourceTrigger=PropertyChanged}"
+                                          SelectedItem="{Binding Path=SelectedPoint,
+                                                                 Mode=TwoWay,
+                                                                 UpdateSourceTrigger=PropertyChanged}">
+                                    <i:Interaction.Behaviors>
+                                        <bv:SelectedItemsBehavior SelectedItems="{Binding Path=SelectedPoints, Mode=OneWayToSource}" />
+                                    </i:Interaction.Behaviors>
+
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Point" />
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+
+                                    <ListView.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding Path=AddPointCommand}" Header="Добавить">
+                                                <MenuItem.Icon>
+                                                    <Image Source="..\Resources\add.png" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Command="{Binding Path=DeletePointsCommand}" Header="Удалить">
+                                                <MenuItem.Icon>
+                                                    <Image Source="..\Resources\delete.png" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </ListView.ContextMenu>
+                                </ListView>
+
+                                <Grid Grid.Column="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+
+                                        <GroupBox Grid.Row="0"
+                                                  Margin="3"
+                                                  Header="Точка">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0"
+                                                           Grid.Column="0"
+                                                           VerticalAlignment="Center"
+                                                           Text="X " />
+                                                <TextBox Grid.Row="0"
+                                                         Grid.Column="1"
+                                                         Margin="3"
+                                                         Text="{Binding Path=SelectedPoint.From.X,
+                                                                        Mode=TwoWay,
+                                                                        UpdateSourceTrigger=PropertyChanged}" />
+
+                                                <TextBlock Grid.Row="1"
+                                                           Grid.Column="0"
+                                                           VerticalAlignment="Center"
+                                                           Text="Y " />
+                                                <TextBox Grid.Row="1"
+                                                         Grid.Column="1"
+                                                         Margin="3"
+                                                         Text="{Binding Path=SelectedPoint.From.Y,
+                                                                        Mode=TwoWay,
+                                                                        UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                                <TextBlock Grid.Row="2"
+                                                           Grid.Column="0"
+                                                           VerticalAlignment="Center"
+                                                           Text="Z " />
+                                                <TextBox Grid.Row="2"
+                                                         Grid.Column="1"
+                                                         Margin="3"
+                                                         Text="{Binding Path=SelectedPoint.From.Z,
+                                                                        Mode=TwoWay,
+                                                                        UpdateSourceTrigger=PropertyChanged}" />
+                                            </Grid>
+                                        </GroupBox>
+
+                                        <GroupBox Grid.Row="1"
+                                                  Margin="3"
+                                                  Header="Поворот">
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0"
+                                                           Grid.Column="0"
+                                                           VerticalAlignment="Center"
+                                                           Text="X " />
+                                                <TextBox Grid.Row="0"
+                                                         Grid.Column="1"
+                                                         Margin="3"
+                                                         Text="{Binding Path=SelectedPoint.Direction.X,
+                                                                        Mode=TwoWay,
+                                                                        UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                                <TextBlock Grid.Row="1"
+                                                           Grid.Column="0"
+                                                           VerticalAlignment="Center"
+                                                           Text="Y " />
+                                                <TextBox Grid.Row="1"
+                                                         Grid.Column="1"
+                                                         Margin="3"
+                                                         Text="{Binding Path=SelectedPoint.Direction.Y,
+                                                                        Mode=TwoWay,
+                                                                        UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                                <TextBlock Grid.Row="2"
+                                                           Grid.Column="0"
+                                                           VerticalAlignment="Center"
+                                                           Text="Z " />
+                                                <TextBox Grid.Row="2"
+                                                         Grid.Column="1"
+                                                         Margin="3"
+                                                         Text="{Binding Path=SelectedPoint.Direction.Z,
+                                                                        Mode=TwoWay,
+                                                                        UpdateSourceTrigger=PropertyChanged}" />
+                                            </Grid>
+                                        </GroupBox>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Expander>
+
+                        <Expander Grid.Row="2"
+                                  Margin="0,5,3,0"
+                                  BorderBrush="LightGray"
+                                  Header="Сегменты"
+                                  Padding="3">
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <ListView Name="PathSegments"
+                                          Grid.Column="0"
+                                          Width="135"
+                                          MaxHeight="335"
+                                          Margin="3"
+                                          ItemsSource="{Binding Path=SelectedPath.Segments,
+                                                                UpdateSourceTrigger=PropertyChanged}"
+                                          SelectedItem="{Binding Path=SelectedSegment,
+                                                                 Mode=TwoWay,
+                                                                 UpdateSourceTrigger=PropertyChanged}">
+
+                                    <i:Interaction.Behaviors>
+                                        <bv:SelectedItemsBehavior SelectedItems="{Binding Path=SelectedSegments, Mode=OneWayToSource}" />
+                                    </i:Interaction.Behaviors>
+
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Segment" />
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+
+                                    <ListView.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding AddSegmentCommand}" Header="Добавить">
+                                                <MenuItem.Icon>
+                                                    <Image Source="..\Resources\add.png" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Header="Добавить все сегменты">
+                                                <MenuItem.Icon>
+                                                    <Image Source="..\Resources\add.png" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Command="{Binding Path=DeleteSegmentsCommand}" Header="Удалить">
+                                                <MenuItem.Icon>
+                                                    <Image Source="..\Resources\delete.png" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </ListView.ContextMenu>
+                                </ListView>
+
+                                <Grid Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+
+                                    <GroupBox Grid.Row="0"
+                                              Margin="3"
+                                              Header="Точка начала сегмента">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       VerticalAlignment="Center"
+                                                       Text="ID" />
+                                            <TextBox Grid.Row="0"
+                                                     Grid.Column="1"
+                                                     Margin="3"
+                                                     Text="{Binding Path=SelectedSegment.HeadPoint,
+                                                                    Mode=TwoWay,
+                                                                    UpdateSourceTrigger=PropertyChanged}" />
+
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       VerticalAlignment="Center"
+                                                       Text="X" />
+                                            <TextBox Grid.Row="1"
+                                                     Grid.Column="1"
+                                                     Margin="3"
+                                                     Text="{Binding Path=SelectedSegment.AnchorHead.X,
+                                                                    Mode=TwoWay,
+                                                                    UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="0"
+                                                       VerticalAlignment="Center"
+                                                       Text="Y" />
+                                            <TextBox Grid.Row="2"
+                                                     Grid.Column="1"
+                                                     Margin="3"
+                                                     Text="{Binding Path=SelectedSegment.AnchorHead.Y,
+                                                                    Mode=TwoWay,
+                                                                    UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                            <TextBlock Grid.Row="3"
+                                                       Grid.Column="0"
+                                                       VerticalAlignment="Center"
+                                                       Text="Z" />
+                                            <TextBox Grid.Row="3"
+                                                     Grid.Column="1"
+                                                     Margin="3"
+                                                     Text="{Binding Path=SelectedSegment.AnchorHead.Z,
+                                                                    Mode=TwoWay,
+                                                                    UpdateSourceTrigger=PropertyChanged}" />
+                                        </Grid>
+                                    </GroupBox>
+
+                                    <GroupBox Grid.Row="1"
+                                              Margin="3"
+                                              Header="Точка конца сегмента">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       VerticalAlignment="Center"
+                                                       Text="ID" />
+                                            <TextBox Grid.Row="0"
+                                                     Grid.Column="1"
+                                                     Margin="3"
+                                                     Text="{Binding Path=SelectedSegment.TailPoint,
+                                                                    Mode=TwoWay,
+                                                                    UpdateSourceTrigger=PropertyChanged}" />
+
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       VerticalAlignment="Center"
+                                                       Text="X" />
+                                            <TextBox Grid.Row="1"
+                                                     Grid.Column="1"
+                                                     Margin="3"
+                                                     Text="{Binding Path=SelectedSegment.AnchorTail.X,
+                                                                    Mode=TwoWay,
+                                                                    UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="0"
+                                                       VerticalAlignment="Center"
+                                                       Text="Y" />
+                                            <TextBox Grid.Row="2"
+                                                     Grid.Column="1"
+                                                     Margin="3"
+                                                     Text="{Binding Path=SelectedSegment.AnchorTail.Y,
+                                                                    Mode=TwoWay,
+                                                                    UpdateSourceTrigger=PropertyChanged}" />
+
+
+                                            <TextBlock Grid.Row="3"
+                                                       Grid.Column="0"
+                                                       VerticalAlignment="Center"
+                                                       Text="Z" />
+                                            <TextBox Grid.Row="3"
+                                                     Grid.Column="1"
+                                                     Margin="3"
+                                                     Text="{Binding Path=SelectedSegment.AnchorTail.Z,
+                                                                    Mode=TwoWay,
+                                                                    UpdateSourceTrigger=PropertyChanged}" />
+                                        </Grid>
+                                    </GroupBox>
+                                </Grid>
+                            </Grid>
+                        </Expander>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+</ma:MetroWindow>
