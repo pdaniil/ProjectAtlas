@@ -1,21 +1,13 @@
-The MIT License (MIT)
+Easy to use editor for **path.sev** file form **Perfect World** game.
 
-Copyright (c) 2015 p.daniil
+What it has:
+- Load and save **path.sev** file
+- **All** values editing
+- Getting coordinates from game client using hotkey: **Ctrl+Z**
+- Adding own offsets to **offsets.txt** file with automatic loading at app startup (used for getting coordinates in different game client versions)
+- **Multi-deleting** of selected items from lists
+- Preview of selected path on **map** (only main game location)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+A few screenshots:
+![29](https://cloud.githubusercontent.com/assets/5897241/8504401/ad74e61a-21d9-11e5-9bc7-54d46be7f6ea.PNG)
+![30](https://cloud.githubusercontent.com/assets/5897241/8504402/b0b382dc-21d9-11e5-9369-c67013881b4f.PNG)
